@@ -30,12 +30,13 @@ public:
 
 	GeneticAlgorithmWrapper(void);
 
-	void CreateInstance(/*List<String^> ^_t, List<Byte> ^_c, List<int> ^_hpw, List<List<int>^> ^_cc, List<List<KeyValuePair<int, int>>^> ^_fh*/);
+	void CreateInstance();
 	bool add_teacher(String ^);
 	bool add_classes(Byte);
 	void add_hpc(int);
 	bool add_classes_curriculum(KeyValuePair<Byte, KeyValuePair<String ^, int>>);
 	bool add_fixed_hours(KeyValuePair<String ^, KeyValuePair<String ^, int>>);
+	void clean_data();
 
 	void add_classes_curriculum(List<int> ^);
 	void add_fixed_hours(List<KeyValuePair<int, int>> ^);

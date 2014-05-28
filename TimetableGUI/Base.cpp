@@ -32,6 +32,8 @@ GeneticAlgorithm::GeneticAlgorithm(std::vector<std::string> _teachers, std::vect
 	hours_for_classes = _hours_for_classes;
 	classes_curriculum = _classes_curriculum;
 
+	finished = false;
+
 	// Tworzenie planow
 	timetables = new char***[population_size];
 
@@ -50,7 +52,7 @@ GeneticAlgorithm::GeneticAlgorithm(std::vector<std::string> _teachers, std::vect
 			}
 		}
 	}
-	
+	/*
 	std::ofstream myfile;
 	myfile.open ("manual_file.txt");
 
@@ -86,6 +88,7 @@ GeneticAlgorithm::GeneticAlgorithm(std::vector<std::string> _teachers, std::vect
 	myfile << "==========" << std::endl;
 
 	myfile.close();
+	*/
 }
 
 GeneticAlgorithm::~GeneticAlgorithm()

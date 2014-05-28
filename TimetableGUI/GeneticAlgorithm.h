@@ -19,6 +19,9 @@ private:
 	int classes_count;
 	int population_size;
 
+	// is finished
+	volatile bool finished;
+
 	std::vector<std::string> teachers;
 	std::vector<char> classes;
 	std::vector<int> hours_for_classes;

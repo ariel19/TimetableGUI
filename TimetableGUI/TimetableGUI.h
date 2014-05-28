@@ -12,6 +12,7 @@ namespace TimetableGUI {
 	using namespace System::Drawing;
 	using namespace System::Collections;
 	using namespace System::IO;
+	using namespace System::Threading;
 
 	/// <summary>
 	/// Summary for Form1
@@ -22,10 +23,6 @@ namespace TimetableGUI {
 		TTGUI(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
-
 		}
 
 	protected:
@@ -88,6 +85,11 @@ namespace TimetableGUI {
 	private: System::Windows::Forms::Button^  btnReadFromFile;
 	private: System::Windows::Forms::Button^  btnSaveToFile;
 	private: System::Windows::Forms::Label^  lblHours;
+	private: System::Windows::Forms::GroupBox^  gbResult;
+	private: System::Windows::Forms::TextBox^  txtPlan;
+	private: System::Windows::Forms::Button^  btnClearAll;
+	private: System::Windows::Forms::Button^  btnSavePlan;
+
 
 			 GeneticAlgorithmWrapper gaw;
 
@@ -125,24 +127,29 @@ namespace TimetableGUI {
 			this->cbDays = (gcnew System::Windows::Forms::ComboBox());
 			this->tcTFH = (gcnew System::Windows::Forms::TabControl());
 			this->gbCCI = (gcnew System::Windows::Forms::GroupBox());
+			this->lblHours = (gcnew System::Windows::Forms::Label());
 			this->btnHours = (gcnew System::Windows::Forms::Button());
 			this->txtHours = (gcnew System::Windows::Forms::TextBox());
 			this->cbTeachers = (gcnew System::Windows::Forms::ComboBox());
 			this->tcClassesInfo = (gcnew System::Windows::Forms::TabControl());
 			this->btnReadFromFile = (gcnew System::Windows::Forms::Button());
 			this->btnSaveToFile = (gcnew System::Windows::Forms::Button());
-			this->lblHours = (gcnew System::Windows::Forms::Label());
+			this->gbResult = (gcnew System::Windows::Forms::GroupBox());
+			this->txtPlan = (gcnew System::Windows::Forms::TextBox());
+			this->btnClearAll = (gcnew System::Windows::Forms::Button());
+			this->btnSavePlan = (gcnew System::Windows::Forms::Button());
 			this->gbTeachers->SuspendLayout();
 			this->gbClasses->SuspendLayout();
 			this->gbTFH->SuspendLayout();
 			this->gbCCI->SuspendLayout();
+			this->gbResult->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// btnCalculate
 			// 
-			this->btnCalculate->Location = System::Drawing::Point(292, 515);
+			this->btnCalculate->Location = System::Drawing::Point(12, 384);
 			this->btnCalculate->Name = L"btnCalculate";
-			this->btnCalculate->Size = System::Drawing::Size(75, 23);
+			this->btnCalculate->Size = System::Drawing::Size(100, 23);
 			this->btnCalculate->TabIndex = 0;
 			this->btnCalculate->Text = L"Calculate";
 			this->btnCalculate->UseVisualStyleBackColor = true;
@@ -253,7 +260,7 @@ namespace TimetableGUI {
 			this->gbClasses->Controls->Add(this->lblClassID);
 			this->gbClasses->Controls->Add(this->btnRemoveClass);
 			this->gbClasses->Controls->Add(this->lbClasses);
-			this->gbClasses->Location = System::Drawing::Point(12, 264);
+			this->gbClasses->Location = System::Drawing::Point(552, 13);
 			this->gbClasses->Name = L"gbClasses";
 			this->gbClasses->Size = System::Drawing::Size(235, 245);
 			this->gbClasses->TabIndex = 14;
@@ -330,7 +337,7 @@ namespace TimetableGUI {
 			this->gbTFH->Controls->Add(this->lblFixedHour);
 			this->gbTFH->Controls->Add(this->cbDays);
 			this->gbTFH->Controls->Add(this->tcTFH);
-			this->gbTFH->Location = System::Drawing::Point(272, 12);
+			this->gbTFH->Location = System::Drawing::Point(259, 12);
 			this->gbTFH->Name = L"gbTFH";
 			this->gbTFH->Size = System::Drawing::Size(287, 246);
 			this->gbTFH->TabIndex = 15;
@@ -388,12 +395,21 @@ namespace TimetableGUI {
 			this->gbCCI->Controls->Add(this->txtHours);
 			this->gbCCI->Controls->Add(this->cbTeachers);
 			this->gbCCI->Controls->Add(this->tcClassesInfo);
-			this->gbCCI->Location = System::Drawing::Point(272, 264);
+			this->gbCCI->Location = System::Drawing::Point(793, 13);
 			this->gbCCI->Name = L"gbCCI";
 			this->gbCCI->Size = System::Drawing::Size(287, 245);
 			this->gbCCI->TabIndex = 16;
 			this->gbCCI->TabStop = false;
 			this->gbCCI->Text = L"Classes info";
+			// 
+			// lblHours
+			// 
+			this->lblHours->AutoSize = true;
+			this->lblHours->Location = System::Drawing::Point(74, 166);
+			this->lblHours->Name = L"lblHours";
+			this->lblHours->Size = System::Drawing::Size(35, 13);
+			this->lblHours->TabIndex = 4;
+			this->lblHours->Text = L"Hours";
 			// 
 			// btnHours
 			// 
@@ -430,7 +446,7 @@ namespace TimetableGUI {
 			// 
 			// btnReadFromFile
 			// 
-			this->btnReadFromFile->Location = System::Drawing::Point(21, 515);
+			this->btnReadFromFile->Location = System::Drawing::Point(12, 308);
 			this->btnReadFromFile->Name = L"btnReadFromFile";
 			this->btnReadFromFile->Size = System::Drawing::Size(100, 23);
 			this->btnReadFromFile->TabIndex = 17;
@@ -440,7 +456,7 @@ namespace TimetableGUI {
 			// 
 			// btnSaveToFile
 			// 
-			this->btnSaveToFile->Location = System::Drawing::Point(127, 515);
+			this->btnSaveToFile->Location = System::Drawing::Point(12, 346);
 			this->btnSaveToFile->Name = L"btnSaveToFile";
 			this->btnSaveToFile->Size = System::Drawing::Size(100, 23);
 			this->btnSaveToFile->TabIndex = 18;
@@ -448,20 +464,56 @@ namespace TimetableGUI {
 			this->btnSaveToFile->UseVisualStyleBackColor = true;
 			this->btnSaveToFile->Click += gcnew System::EventHandler(this, &TTGUI::btnSaveToFile_Click);
 			// 
-			// lblHours
+			// gbResult
 			// 
-			this->lblHours->AutoSize = true;
-			this->lblHours->Location = System::Drawing::Point(74, 166);
-			this->lblHours->Name = L"lblHours";
-			this->lblHours->Size = System::Drawing::Size(35, 13);
-			this->lblHours->TabIndex = 4;
-			this->lblHours->Text = L"Hours";
+			this->gbResult->Controls->Add(this->txtPlan);
+			this->gbResult->Location = System::Drawing::Point(259, 276);
+			this->gbResult->Name = L"gbResult";
+			this->gbResult->Size = System::Drawing::Size(821, 263);
+			this->gbResult->TabIndex = 19;
+			this->gbResult->TabStop = false;
+			this->gbResult->Text = L"Plan";
+			// 
+			// txtPlan
+			// 
+			this->txtPlan->AcceptsReturn = true;
+			this->txtPlan->Font = (gcnew System::Drawing::Font(L"Consolas", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(0)));
+			this->txtPlan->Location = System::Drawing::Point(7, 20);
+			this->txtPlan->Multiline = true;
+			this->txtPlan->Name = L"txtPlan";
+			this->txtPlan->ReadOnly = true;
+			this->txtPlan->Size = System::Drawing::Size(808, 237);
+			this->txtPlan->TabIndex = 0;
+			// 
+			// btnClearAll
+			// 
+			this->btnClearAll->Location = System::Drawing::Point(13, 276);
+			this->btnClearAll->Name = L"btnClearAll";
+			this->btnClearAll->Size = System::Drawing::Size(99, 23);
+			this->btnClearAll->TabIndex = 20;
+			this->btnClearAll->Text = L"Clear all";
+			this->btnClearAll->UseVisualStyleBackColor = true;
+			this->btnClearAll->Click += gcnew System::EventHandler(this, &TTGUI::btnClearAll_Click);
+			// 
+			// btnSavePlan
+			// 
+			this->btnSavePlan->Location = System::Drawing::Point(13, 510);
+			this->btnSavePlan->Name = L"btnSavePlan";
+			this->btnSavePlan->Size = System::Drawing::Size(99, 23);
+			this->btnSavePlan->TabIndex = 21;
+			this->btnSavePlan->Text = L"Save plan";
+			this->btnSavePlan->UseVisualStyleBackColor = true;
+			this->btnSavePlan->Click += gcnew System::EventHandler(this, &TTGUI::btnSavePlan_Click);
 			// 
 			// TTGUI
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1008, 551);
+			this->ClientSize = System::Drawing::Size(1096, 551);
+			this->Controls->Add(this->btnSavePlan);
+			this->Controls->Add(this->btnClearAll);
+			this->Controls->Add(this->gbResult);
 			this->Controls->Add(this->btnSaveToFile);
 			this->Controls->Add(this->btnReadFromFile);
 			this->Controls->Add(this->gbCCI);
@@ -469,6 +521,8 @@ namespace TimetableGUI {
 			this->Controls->Add(this->gbClasses);
 			this->Controls->Add(this->gbTeachers);
 			this->Controls->Add(this->btnCalculate);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->MaximizeBox = false;
 			this->Name = L"TTGUI";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"Timetable";
@@ -480,22 +534,55 @@ namespace TimetableGUI {
 			this->gbTFH->PerformLayout();
 			this->gbCCI->ResumeLayout(false);
 			this->gbCCI->PerformLayout();
+			this->gbResult->ResumeLayout(false);
+			this->gbResult->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 	private: System::Void btnCalculate_Click(System::Object^  sender, System::EventArgs^  e) {
-				 if (lbClasses->Items->Count == 0 || lbTeachers->Items->Count == 0) {
+				if (lbClasses->Items->Count == 0 || lbTeachers->Items->Count == 0) {
 					MessageBox::Show("Empty data, please provide information.", "Incorrect data", MessageBoxButtons::OK);
 					return;
-				 }
+				}
 
-				 gaw.CreateInstance();
+				Thread ^thread_compute = gcnew Thread(gcnew ThreadStart(%gaw, &GeneticAlgorithmWrapper::CreateInstance));
+				// create 2 threads, one for computing, second one for showing info about computations
+				//gaw.CreateInstance();	
+				thread_compute->Start();
+				btnCalculate->Enabled = false;
+				this->Text = "Timetable (Calculating...)";
+
+				//thread_compute->Name
+				 
+				thread_compute->Join();	
+
+				String ^ fn = "result.pout";
+				txtPlan->Text = "";
+
+				try {
+					StreamReader ^sr = File::OpenText(fn);
+					String ^s;
+					Console::WriteLine("Processing file...");
+
+					while((s = sr->ReadLine()) != nullptr)
+						if (!String::IsNullOrWhiteSpace(s))
+							txtPlan->AppendText(s + "\r\n");
+
+				} catch(Exception ^e) {
+					MessageBox::Show(e->Message, "Plan file processing", MessageBoxButtons::OK);
+					return;
+				}
+
+				btnCalculate->Enabled = true;
+				this->Text = "Timetable";
+
 			 }
 private: System::Void btnClrTeacher_Click(System::Object^  sender, System::EventArgs^  e) {
 			 txtLastname->Text = "";
 			 txtSubject->Text = "";
 		 }
+		 // TODO: size of listboxes
 private: System::Void btnAddTeacher_Click(System::Object^  sender, System::EventArgs^  e) {
 			 if (String::IsNullOrWhiteSpace(txtLastname->Text) || String::IsNullOrWhiteSpace(txtSubject->Text)) {
 				 MessageBox::Show("Please, fill subject and lastname fields", "Incorrect data", MessageBoxButtons::OK);
@@ -510,13 +597,19 @@ private: System::Void btnAddTeacher_Click(System::Object^  sender, System::Event
 
 			 // valid data is presented, so put it in ListBox
 			 TabPage ^tp = gcnew TabPage;
-			 tp->Controls->Add(gcnew ListBox());
+			 ListBox ^lb = gcnew ListBox();
+			 ///
+			 lb->Size.Height = tcTFH->Size.Height;
+			 lb->Size.Width = tcTFH->Size.Width;
+			 ///
+			 tp->Controls->Add(lb);
 			 tp->Text = txtSubject->Text + "/" + txtLastname->Text;
 			 lbTeachers->Items->Add(txtSubject->Text + "/" + txtLastname->Text);
 			 tcTFH->Controls->Add(tp);
 
 			 cbTeachers->Items->Add(txtSubject->Text + "/" + txtLastname->Text);
 		 }
+		 // TODO: size of list boxes
 private: System::Void btnAddClass_Click(System::Object^  sender, System::EventArgs^  e) {
 			 if (String::IsNullOrWhiteSpace(txtClassID->Text) || String::IsNullOrWhiteSpace(txthpw->Text)) {
 				 MessageBox::Show("Please, fill class id and hours per week fields", "Incorrect data", MessageBoxButtons::OK);
@@ -538,8 +631,12 @@ private: System::Void btnAddClass_Click(System::Object^  sender, System::EventAr
 
 			 TabPage ^tp = gcnew TabPage;
 			 ListBox ^lb = gcnew ListBox;
+			 ///
+			 lb->Size.Height = tcClassesInfo->Size.Height;
+			 lb->Size.Width = tcClassesInfo->Size.Width;
+			 ///
 			 tp->Controls->Add(gcnew ListBox());
-			 tp->Text = txtClassID->Text;
+			 tp->Text = txtClassID->Text + "/" + txthpw->Text;
 			 lbClasses->Items->Add(txtClassID->Text + "/" + txthpw->Text);
 			 tcClassesInfo->Controls->Add(tp);
 		 }
@@ -604,6 +701,10 @@ private: System::Void btnReadFromFile_Click(System::Object^  sender, System::Eve
 				 return;
 			 
 			 try {
+				 // clean information
+				 gaw.clean_data();
+				 clean_data();
+
 				 StreamReader ^sr = File::OpenText(ofd->FileName);
 				 String ^str;
 				 int count, i, teachers;
@@ -705,6 +806,34 @@ private: System::Void btnSaveToFile_Click(System::Object^  sender, System::Event
 			 if ((stream = sfd->OpenFile()) != nullptr) {
 
 				 array<unsigned char> ^data = gaw.make_conversion(true)->ToArray();
+				 stream->Write(data, 0, data->Length);
+				 stream->Close();
+			 }
+		 }
+private: System::Void clean_data() {
+			 lbTeachers->Items->Clear();
+			 lbClasses->Items->Clear();
+			 tcTFH->Controls->Clear();
+			 tcClassesInfo->Controls->Clear();
+			 cbTeachers->Items->Clear();
+		}
+private: System::Void btnClearAll_Click(System::Object^  sender, System::EventArgs^  e) {
+			 gaw.clean_data();
+			 clean_data();
+		 }
+private: System::Void btnSavePlan_Click(System::Object^  sender, System::EventArgs^  e) {
+			 SaveFileDialog ^sfd = gcnew SaveFileDialog;
+
+			 sfd->DefaultExt = ".oplan";
+
+			 if (sfd->ShowDialog() != System::Windows::Forms::DialogResult::OK) {
+				 return;
+			 }
+			 Stream ^stream;
+			 if ((stream = sfd->OpenFile()) != nullptr) {
+				 List<Byte> ^l = gcnew List<Byte>;
+				 gaw.str_to_array(txtPlan->Text, l);
+				 array<unsigned char> ^data = l->ToArray();
 				 stream->Write(data, 0, data->Length);
 				 stream->Close();
 			 }

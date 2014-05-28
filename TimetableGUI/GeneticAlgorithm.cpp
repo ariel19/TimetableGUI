@@ -14,6 +14,8 @@
 bool GeneticAlgorithm::CreateTimetable(int stop, float infeasibilitiesWeight, float didacticDissatisfactionWeight, 
 									   float organizationalDissatisfactionWeight, int mutationGenSize, float crossoverProbability)
 {
+	finished = false;
+
 	if(!CheckData())
 	{
 		std::cout << "Bledne dane wejsciowe!" << std::endl;
@@ -34,7 +36,7 @@ bool GeneticAlgorithm::CreateTimetable(int stop, float infeasibilitiesWeight, fl
 	int seed = time(NULL);
 	while(it < stop)
 	{
-		std::cout << "New population cycle"<<std::endl;
+		std::cout << "New population cycle " << it << std::endl;
 		srand(seed++);
 		int iteration = 0;
 		Initialize();
@@ -44,6 +46,7 @@ bool GeneticAlgorithm::CreateTimetable(int stop, float infeasibilitiesWeight, fl
 		}
 		for(; it < stop; ++it)
 		{
+			std::cout << it << std::endl;
 			float *initial_fitness = CalculateObjectiveFunction(timetables, population_size, infeasibilitiesWeight, didacticDissatisfactionWeight, 
 				organizationalDissatisfactionWeight);
 			std::vector<char***> new_population = Reproduction(initial_fitness);
@@ -97,9 +100,16 @@ bool GeneticAlgorithm::CreateTimetable(int stop, float infeasibilitiesWeight, fl
 		}
 	}
 
+	std::ofstream result;
+	result.open("result.pout");
 	std::cout << "Final minimum: " << std::endl << min << std::endl;
 	std::cout << "Final solution:" << std::endl;
 	PrintTimetable(solution, std::cout);
+	PrintTimetable(solution, result);
+	result.close();
+
+	finished = true;
+
 	return true;
 }
 

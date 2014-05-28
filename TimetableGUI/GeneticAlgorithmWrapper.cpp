@@ -26,7 +26,7 @@ GeneticAlgorithmWrapper::GeneticAlgorithmWrapper(void) {
 	days_num->Add("Friday", 5);
 }
 
-void GeneticAlgorithmWrapper::CreateInstance(/*List<String^> ^_t, List<Byte> ^_c, List<int> ^_hpw, List<List<int>^> ^_cc, List<List<KeyValuePair<int, int>>^> ^_fh*/) {
+void GeneticAlgorithmWrapper::CreateInstance() {
 	std::vector<std::string> t;
 	std::vector<char> c;
 	std::vector<int> h4c;
@@ -71,10 +71,24 @@ void GeneticAlgorithmWrapper::CreateInstance(/*List<String^> ^_t, List<Byte> ^_c
 	}
 	
 	ga = new GeneticAlgorithm(t, c, h4c, cc, fh, population_size);
-	if(!ga->CreateTimetable(1000, 10, 1, 0.5, 3, 0.95)) {
+	//if(!ga->CreateTimetable(1000, 10, 1, 0.5, 3, 0.95)) {
+	int stop = 5;
+
+	if(!ga->CreateTimetable(stop, 10, 1, 0.5, 3, 0.95)) {
 		MessageBox::Show("Incorrect input data", "Incorrect data", MessageBoxButtons::OK);
 		return;
 	}
+}
+
+void GeneticAlgorithmWrapper::clean_data() {
+	teachers = gcnew List<String^>;
+	classes = gcnew List<Byte>;
+	hours_for_classes = gcnew List<int>;
+	classes_curriculum = gcnew List<List<int>^>;
+	fixed_hours = gcnew List<List<KeyValuePair<int, int>>^>;
+
+	__classes_curriculum = gcnew List<KeyValuePair<Byte, KeyValuePair<String ^, int>>>;
+	__fixed_hours = gcnew List<KeyValuePair<String ^, KeyValuePair<String ^, int>>>;
 }
 
 List<Byte> ^ GeneticAlgorithmWrapper::make_conversion(bool convert) {
