@@ -82,10 +82,12 @@ namespace TimetableGUI {
 
 	private: System::Windows::Forms::Button^  btnFixedHour;
 	private: System::Windows::Forms::TextBox^  txtFixedHour;
-	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::Label^  lblFixedHour;
+
 	private: System::Windows::Forms::ComboBox^  cbDays;
 	private: System::Windows::Forms::Button^  btnReadFromFile;
 	private: System::Windows::Forms::Button^  btnSaveToFile;
+	private: System::Windows::Forms::Label^  lblHours;
 
 			 GeneticAlgorithmWrapper gaw;
 
@@ -119,7 +121,7 @@ namespace TimetableGUI {
 			this->gbTFH = (gcnew System::Windows::Forms::GroupBox());
 			this->btnFixedHour = (gcnew System::Windows::Forms::Button());
 			this->txtFixedHour = (gcnew System::Windows::Forms::TextBox());
-			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->lblFixedHour = (gcnew System::Windows::Forms::Label());
 			this->cbDays = (gcnew System::Windows::Forms::ComboBox());
 			this->tcTFH = (gcnew System::Windows::Forms::TabControl());
 			this->gbCCI = (gcnew System::Windows::Forms::GroupBox());
@@ -129,6 +131,7 @@ namespace TimetableGUI {
 			this->tcClassesInfo = (gcnew System::Windows::Forms::TabControl());
 			this->btnReadFromFile = (gcnew System::Windows::Forms::Button());
 			this->btnSaveToFile = (gcnew System::Windows::Forms::Button());
+			this->lblHours = (gcnew System::Windows::Forms::Label());
 			this->gbTeachers->SuspendLayout();
 			this->gbClasses->SuspendLayout();
 			this->gbTFH->SuspendLayout();
@@ -324,7 +327,7 @@ namespace TimetableGUI {
 			// 
 			this->gbTFH->Controls->Add(this->btnFixedHour);
 			this->gbTFH->Controls->Add(this->txtFixedHour);
-			this->gbTFH->Controls->Add(this->label1);
+			this->gbTFH->Controls->Add(this->lblFixedHour);
 			this->gbTFH->Controls->Add(this->cbDays);
 			this->gbTFH->Controls->Add(this->tcTFH);
 			this->gbTFH->Location = System::Drawing::Point(272, 12);
@@ -351,14 +354,14 @@ namespace TimetableGUI {
 			this->txtFixedHour->Size = System::Drawing::Size(100, 20);
 			this->txtFixedHour->TabIndex = 3;
 			// 
-			// label1
+			// lblFixedHour
 			// 
-			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(53, 168);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(56, 13);
-			this->label1->TabIndex = 2;
-			this->label1->Text = L"Fixed hour";
+			this->lblFixedHour->AutoSize = true;
+			this->lblFixedHour->Location = System::Drawing::Point(53, 168);
+			this->lblFixedHour->Name = L"lblFixedHour";
+			this->lblFixedHour->Size = System::Drawing::Size(56, 13);
+			this->lblFixedHour->TabIndex = 2;
+			this->lblFixedHour->Text = L"Fixed hour";
 			// 
 			// cbDays
 			// 
@@ -380,6 +383,7 @@ namespace TimetableGUI {
 			// 
 			// gbCCI
 			// 
+			this->gbCCI->Controls->Add(this->lblHours);
 			this->gbCCI->Controls->Add(this->btnHours);
 			this->gbCCI->Controls->Add(this->txtHours);
 			this->gbCCI->Controls->Add(this->cbTeachers);
@@ -444,6 +448,15 @@ namespace TimetableGUI {
 			this->btnSaveToFile->UseVisualStyleBackColor = true;
 			this->btnSaveToFile->Click += gcnew System::EventHandler(this, &TTGUI::btnSaveToFile_Click);
 			// 
+			// lblHours
+			// 
+			this->lblHours->AutoSize = true;
+			this->lblHours->Location = System::Drawing::Point(74, 166);
+			this->lblHours->Name = L"lblHours";
+			this->lblHours->Size = System::Drawing::Size(35, 13);
+			this->lblHours->TabIndex = 4;
+			this->lblHours->Text = L"Hours";
+			// 
 			// TTGUI
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -471,19 +484,8 @@ namespace TimetableGUI {
 
 		}
 #pragma endregion
-		// TODO: add data validation
-		private: System::Boolean IsDataValid() {
-					 //return (lbClasses->Items->Count == lbTeachers->Items->Count);
-					 return true;
-				 } 
-
 	private: System::Void btnCalculate_Click(System::Object^  sender, System::EventArgs^  e) {
-				 if (!IsDataValid()) {
-					MessageBox::Show("Data is inconsistent, please check it again.", "Incorrect data", MessageBoxButtons::OK);
-					return;
-				 }
-
-				 if (lbClasses->Items->Count == 0) {
+				 if (lbClasses->Items->Count == 0 || lbTeachers->Items->Count == 0) {
 					MessageBox::Show("Empty data, please provide information.", "Incorrect data", MessageBoxButtons::OK);
 					return;
 				 }
@@ -509,7 +511,7 @@ private: System::Void btnAddTeacher_Click(System::Object^  sender, System::Event
 			 // valid data is presented, so put it in ListBox
 			 TabPage ^tp = gcnew TabPage;
 			 tp->Controls->Add(gcnew ListBox());
-			 tp->Text = txtLastname->Text + "/" + txtLastname->Text;
+			 tp->Text = txtSubject->Text + "/" + txtLastname->Text;
 			 lbTeachers->Items->Add(txtSubject->Text + "/" + txtLastname->Text);
 			 tcTFH->Controls->Add(tp);
 
@@ -564,9 +566,11 @@ private: System::Void btnHours_Click(System::Object^  sender, System::EventArgs^
 
 			 // add logic info
 			if (gaw.add_classes_curriculum(KeyValuePair<Byte, KeyValuePair<String ^, int>>((Byte)tp->Text[0],
-				KeyValuePair<String ^, int>(s, Int32::Parse(txtHours->Text)))))
+				KeyValuePair<String ^, int>(s, Int32::Parse(txtHours->Text))))) {
 				// just for view
 				((ListBox ^)(tp->Controls[0]))->Items->Add(s + "/" + txtHours->Text);
+				gaw.prepared_data = false;
+			}
 		 }
 
 private: System::Void btnFixedHour_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -586,13 +590,13 @@ private: System::Void btnFixedHour_Click(System::Object^  sender, System::EventA
 			 int index = tcClassesInfo->SelectedIndex;
 
 			 if(gaw.add_fixed_hours(KeyValuePair<String ^, KeyValuePair<String ^, int>>(tp->Text,
-				 KeyValuePair<String ^, int>(s, Int32::Parse(txtFixedHour->Text)))))
+				 KeyValuePair<String ^, int>(s, Int32::Parse(txtFixedHour->Text))))) {
 				  ((ListBox ^)(tp->Controls[0]))->Items->Add(s + "/" + txtFixedHour->Text); // visual info
+				  gaw.prepared_data = false;
+			 }
 		 }
 		 // TODO: add filter
 private: System::Void btnReadFromFile_Click(System::Object^  sender, System::EventArgs^  e) {
-			 
-			 //FolderBrowserDialog ^fbd = gcnew FolderBrowserDialog;
 			 OpenFileDialog ^ofd = gcnew OpenFileDialog;
 
 			 //ofd->Filter = ".plan";
@@ -657,9 +661,10 @@ private: System::Void btnReadFromFile_Click(System::Object^  sender, System::Eve
 						 if (h != 0) {
 							 ((ListBox ^)(tcClassesInfo->Controls[i]->Controls[0]))->Items->Add(
 								 cbTeachers->Items[j]->ToString() + "/" + str);
+							 gaw.add_classes_curriculum((KeyValuePair<Byte, KeyValuePair<String ^, int>>(gaw.classes[i],
+								KeyValuePair<String ^, int>(gaw.teachers[j], h))));
 						 }
 					 }
-					 gaw.add_classes_curriculum(l);
 				 }
 
 				 // fixed hours
@@ -677,13 +682,10 @@ private: System::Void btnReadFromFile_Click(System::Object^  sender, System::Eve
 
 						 ((ListBox ^)(tcTFH->Controls[i]->Controls[0]))->Items->Add(gaw.num_to_day(Int32::Parse(words[0]))
 							 + "/" + words[1]);
+						 gaw.add_fixed_hours(KeyValuePair<String ^, KeyValuePair<String ^, int>>(gaw.teachers[i], 
+							 KeyValuePair<String ^, int>(gaw.num_to_day(Int32::Parse(words[0])), Int32::Parse(words[1]))));
 					 }
-					 gaw.add_fixed_hours(l);
 				 }
-
-				 gaw.prepared_data = true;
-
-				 //gaw.CreateInstance();
 
 			 }
 			 catch(Exception ^ e) {
@@ -701,11 +703,9 @@ private: System::Void btnSaveToFile_Click(System::Object^  sender, System::Event
 			 }
 			 Stream ^stream;
 			 if ((stream = sfd->OpenFile()) != nullptr) {
-				 String ^ out = gaw.make_conversion();
-				 array<wchar_t> ^data = out->ToCharArray();
-				 array<unsigned char> ^_data = System::Text::Encoding::ASCII->GetBytes(data);
-				 stream->Write(_data, 0, out->Length - 1);
 
+				 array<unsigned char> ^data = gaw.make_conversion(true)->ToArray();
+				 stream->Write(data, 0, data->Length);
 				 stream->Close();
 			 }
 		 }

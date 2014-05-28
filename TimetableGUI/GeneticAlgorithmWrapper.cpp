@@ -18,30 +18,12 @@ GeneticAlgorithmWrapper::GeneticAlgorithmWrapper(void) {
 	__classes_curriculum = gcnew List<KeyValuePair<Byte, KeyValuePair<String ^, int>>>;
 	__fixed_hours = gcnew List<KeyValuePair<String ^, KeyValuePair<String ^, int>>>;
 
-	prepared_data = false;
-
 	days_num = gcnew Dictionary<String ^, int>();
 	days_num->Add("Monday", 1);
 	days_num->Add("Tuesday", 2);
 	days_num->Add("Wednesday", 3);
 	days_num->Add("Thursday", 4);
 	days_num->Add("Friday", 5);
-
-	/// =============================
-	/// for testing purposes
-	/*
-	teachers->Add("Coldwind");
-	classes->Add(1);
-	hours_for_classes->Add(5);
-	List<int> ^ t = gcnew List<int>;
-	t->Add(10);
-	classes_curriculum->Add(t);
-	List<KeyValuePair<int, int>>^ t2 = gcnew List<KeyValuePair<int, int>>;
-	t2->Add(KeyValuePair<int, int>(5, 5));
-	fixed_hours->Add(t2);
-	*/
-	/// for testing purposes
-	/// =============================
 }
 
 void GeneticAlgorithmWrapper::CreateInstance(/*List<String^> ^_t, List<Byte> ^_c, List<int> ^_hpw, List<List<int>^> ^_cc, List<List<KeyValuePair<int, int>>^> ^_fh*/) {
@@ -50,10 +32,10 @@ void GeneticAlgorithmWrapper::CreateInstance(/*List<String^> ^_t, List<Byte> ^_c
 	std::vector<int> h4c;
 	std::vector<std::vector<int>> cc;
 	std::vector<std::vector<std::pair<int, int>>> fh;
-
-	if (!prepared_data)
-		convert_to_input();
-
+	
+	convert_to_input();
+	
+	//convert_to_input();
 	// convert teachers
 	for each (String^ elem in teachers) {
 		IntPtr ip = Marshal::StringToHGlobalAnsi(elem);
@@ -95,40 +77,53 @@ void GeneticAlgorithmWrapper::CreateInstance(/*List<String^> ^_t, List<Byte> ^_c
 	}
 }
 
-String ^ GeneticAlgorithmWrapper::make_conversion() {
-	convert_to_input();
+List<Byte> ^ GeneticAlgorithmWrapper::make_conversion(bool convert) {
+	if (convert)
+		convert_to_input();
 	String ^s;
-	
+	List<Byte> ^b = gcnew List<Byte>;
+
 	// convert teachers
-	s = (teachers->Count).ToString() + Environment::NewLine;
+	s = (teachers->Count).ToString();
+
+	str_to_array(s, b);
 
 	for each (String^ elem in teachers)
-		s += elem + Environment::NewLine;
+		str_to_array(elem, b);
 
 	// convert classes
-	s += (classes->Count).ToString() + Environment::NewLine;
+	str_to_array(classes->Count.ToString(), b);
 
-	for each (Byte elem in classes)
-		s += elem + Environment::NewLine;
-
+	for each (Byte elem in classes) {
+		b->Add(elem);
+		b->Add('\r');
+		b->Add('\n');
+	}
 	// convert hours for classes
 	for each (int elem in hours_for_classes)
-		s += elem + Environment::NewLine;
+		str_to_array(elem.ToString(), b);
 	
 	// convert cc
-
 	for each (List<int> ^l in classes_curriculum)
 		for each(int val in l)
-			s += val + Environment::NewLine;
+			str_to_array(val.ToString(), b);
 
 	// convert fixed hours
 	for each (List<KeyValuePair<int, int>> ^l in fixed_hours) {
-		s += (l->Count).ToString() + Environment::NewLine;
+		str_to_array(l->Count.ToString(), b);
 		for each (KeyValuePair<int, int> p in l)
-			s += p.Key + " " + Environment::NewLine;
+			str_to_array((p.Key + 1).ToString() + " " + (p.Value + 1).ToString(), b);
 	}
 
-	return s;
+	return b;
+}
+
+void GeneticAlgorithmWrapper::str_to_array(String ^s, List<Byte> ^ b) {
+	for each (wchar_t c in s) {
+		b->Add((Byte)c);
+	}
+	b->Add('\r');
+	b->Add('\n');
 }
 
 bool GeneticAlgorithmWrapper::add_teacher(String ^t) {
@@ -186,7 +181,8 @@ void GeneticAlgorithmWrapper::convert_to_input() {
 	array<int> ^int_array = gcnew array<int>(_teachers);
 
 	// CLASSES_CURRICULUM
-
+	classes_curriculum = gcnew List<List<int>^>;
+	fixed_hours = gcnew List<List<KeyValuePair<int, int>>^>;
 	// fill array with zeros
 	for (i = 0; i < _teachers; ++i)
 		int_array[i] = 0;

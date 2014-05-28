@@ -37,7 +37,8 @@ Class GeneticAlgorithmWrapper: AutoLayout, AnsiClass, Class, Public, BeforeField
     add_classes_curriculum(KeyValuePair`2): PrivateScope, Public, HideBySig
     add_fixed_hours(List`1): PrivateScope, Public, HideBySig
     add_fixed_hours(KeyValuePair`2): PrivateScope, Public, HideBySig
-    make_conversion(): PrivateScope, Public, HideBySig
+    make_conversion(Boolean(HasFieldMarshal)): PrivateScope, Public, HideBySig
+    str_to_array(String, List`1): PrivateScope, Public, HideBySig
     num_to_day(Int32): PrivateScope, Public, HideBySig
 Class TimetableGUI.TTGUI: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form

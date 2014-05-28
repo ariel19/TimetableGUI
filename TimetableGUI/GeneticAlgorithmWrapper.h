@@ -40,6 +40,7 @@ public:
 	void add_classes_curriculum(List<int> ^);
 	void add_fixed_hours(List<KeyValuePair<int, int>> ^);
 
-	String ^ make_conversion();
+	List<Byte> ^ make_conversion(bool convert);
+	void str_to_array(String ^s, List<Byte> ^ b);
 	String ^ num_to_day(int i);
 };
