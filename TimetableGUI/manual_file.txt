@@ -1,0 +1,16 @@
+Teachers
+B/A
+==========
+Classes
+a
+==========
+Hours for classes
+24
+==========
+Classes curriculum
+0:
+0
+==========
+Fixed hours
+0:
+==========

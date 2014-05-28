@@ -1,0 +1,134 @@
+Teachers
+Matematyka/Adamski
+Matematyka/Bogucki
+Jezyk_polski/Kowalska
+Jezyk_polski/Glowacka
+Jezyk_angielski/Tass
+Jezyk_angielski/Fisher
+Historia/Morawski
+Fizyka/Kaczmarczyk
+Chemia/Jablkowska
+Geografia/Stefanczyk
+==========
+Classes
+a
+b
+c
+d
+e
+f
+==========
+Hours for classes
+25
+25
+25
+25
+25
+25
+==========
+Classes curriculum
+0:
+5
+0
+5
+0
+4
+0
+2
+3
+3
+3
+1:
+5
+0
+5
+0
+4
+0
+2
+3
+3
+3
+2:
+5
+0
+5
+0
+4
+0
+2
+3
+3
+3
+3:
+0
+5
+0
+5
+0
+4
+2
+3
+3
+3
+4:
+0
+5
+0
+5
+0
+4
+2
+3
+3
+3
+5:
+0
+5
+0
+5
+0
+4
+2
+3
+3
+3
+==========
+Fixed hours
+0:
+0 0
+1 0
+2 0
+3 0
+4 0
+1:
+0 5
+1 5
+2 5
+3 5
+4 5
+2:
+3:
+4:
+0 0
+0 1
+0 2
+0 3
+0 4
+0 5
+5:
+6:
+4 0
+4 1
+4 2
+4 3
+4 4
+4 5
+7:
+8:
+2 3
+2 4
+2 5
+9:
+1 1
+==========
