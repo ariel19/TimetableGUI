@@ -106,6 +106,8 @@ bool GeneticAlgorithm::CreateTimetable(int stop, float infeasibilitiesWeight, fl
 	std::cout << "Final solution:" << std::endl;
 	PrintTimetable(solution, std::cout);
 	PrintTimetable(solution, result);
+	// put minimum data into file
+	result << "Minimum: " << min;
 	result.close();
 
 	finished = true;

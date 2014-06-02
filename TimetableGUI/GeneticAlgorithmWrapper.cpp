@@ -35,7 +35,6 @@ void GeneticAlgorithmWrapper::CreateInstance() {
 	
 	convert_to_input();
 	
-	//convert_to_input();
 	// convert teachers
 	for each (String^ elem in teachers) {
 		IntPtr ip = Marshal::StringToHGlobalAnsi(elem);
@@ -71,7 +70,7 @@ void GeneticAlgorithmWrapper::CreateInstance() {
 	}
 	
 	ga = new GeneticAlgorithm(t, c, h4c, cc, fh, population_size);
-	//if(!ga->CreateTimetable(1000, 10, 1, 0.5, 3, 0.95)) {
+
 	int stop = 5;
 
 	if(!ga->CreateTimetable(stop, 10, 1, 0.5, 3, 0.95)) {

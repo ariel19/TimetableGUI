@@ -89,6 +89,8 @@ namespace TimetableGUI {
 	private: System::Windows::Forms::TextBox^  txtPlan;
 	private: System::Windows::Forms::Button^  btnClearAll;
 	private: System::Windows::Forms::Button^  btnSavePlan;
+	private: System::Windows::Forms::TextBox^  txtMinimum;
+	private: System::Windows::Forms::Label^  lblMinimum;
 
 
 			 GeneticAlgorithmWrapper gaw;
@@ -138,6 +140,8 @@ namespace TimetableGUI {
 			this->txtPlan = (gcnew System::Windows::Forms::TextBox());
 			this->btnClearAll = (gcnew System::Windows::Forms::Button());
 			this->btnSavePlan = (gcnew System::Windows::Forms::Button());
+			this->txtMinimum = (gcnew System::Windows::Forms::TextBox());
+			this->lblMinimum = (gcnew System::Windows::Forms::Label());
 			this->gbTeachers->SuspendLayout();
 			this->gbClasses->SuspendLayout();
 			this->gbTFH->SuspendLayout();
@@ -498,7 +502,7 @@ namespace TimetableGUI {
 			// 
 			// btnSavePlan
 			// 
-			this->btnSavePlan->Location = System::Drawing::Point(13, 510);
+			this->btnSavePlan->Location = System::Drawing::Point(13, 443);
 			this->btnSavePlan->Name = L"btnSavePlan";
 			this->btnSavePlan->Size = System::Drawing::Size(99, 23);
 			this->btnSavePlan->TabIndex = 21;
@@ -506,11 +510,30 @@ namespace TimetableGUI {
 			this->btnSavePlan->UseVisualStyleBackColor = true;
 			this->btnSavePlan->Click += gcnew System::EventHandler(this, &TTGUI::btnSavePlan_Click);
 			// 
+			// txtMinimum
+			// 
+			this->txtMinimum->Location = System::Drawing::Point(118, 512);
+			this->txtMinimum->Name = L"txtMinimum";
+			this->txtMinimum->ReadOnly = true;
+			this->txtMinimum->Size = System::Drawing::Size(120, 20);
+			this->txtMinimum->TabIndex = 22;
+			// 
+			// lblMinimum
+			// 
+			this->lblMinimum->AutoSize = true;
+			this->lblMinimum->Location = System::Drawing::Point(61, 515);
+			this->lblMinimum->Name = L"lblMinimum";
+			this->lblMinimum->Size = System::Drawing::Size(51, 13);
+			this->lblMinimum->TabIndex = 23;
+			this->lblMinimum->Text = L"Minimum:";
+			// 
 			// TTGUI
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1096, 551);
+			this->Controls->Add(this->lblMinimum);
+			this->Controls->Add(this->txtMinimum);
 			this->Controls->Add(this->btnSavePlan);
 			this->Controls->Add(this->btnClearAll);
 			this->Controls->Add(this->gbResult);
@@ -537,6 +560,7 @@ namespace TimetableGUI {
 			this->gbResult->ResumeLayout(false);
 			this->gbResult->PerformLayout();
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
@@ -548,17 +572,15 @@ namespace TimetableGUI {
 
 				Thread ^thread_compute = gcnew Thread(gcnew ThreadStart(%gaw, &GeneticAlgorithmWrapper::CreateInstance));
 				// create 2 threads, one for computing, second one for showing info about computations
-				//gaw.CreateInstance();	
 				thread_compute->Start();
 				btnCalculate->Enabled = false;
 				this->Text = "Timetable (Calculating...)";
-
-				//thread_compute->Name
 				 
 				thread_compute->Join();	
 
 				String ^ fn = "result.pout";
 				txtPlan->Text = "";
+				String ^ min = "Minimum: ";
 
 				try {
 					StreamReader ^sr = File::OpenText(fn);
@@ -566,13 +588,18 @@ namespace TimetableGUI {
 					Console::WriteLine("Processing file...");
 
 					while((s = sr->ReadLine()) != nullptr)
-						if (!String::IsNullOrWhiteSpace(s))
-							txtPlan->AppendText(s + "\r\n");
+						if (!String::IsNullOrWhiteSpace(s)) {
+							if (!s->StartsWith(min))
+								txtPlan->AppendText(s + "\r\n");
+							else txtMinimum->Text = s->Substring(min->Length);
+						}
 
 				} catch(Exception ^e) {
 					MessageBox::Show(e->Message, "Plan file processing", MessageBoxButtons::OK);
 					return;
 				}
+
+				Console::WriteLine("Processing file done");
 
 				btnCalculate->Enabled = true;
 				this->Text = "Timetable";
@@ -692,11 +719,10 @@ private: System::Void btnFixedHour_Click(System::Object^  sender, System::EventA
 				  gaw.prepared_data = false;
 			 }
 		 }
-		 // TODO: add filter
+		 
 private: System::Void btnReadFromFile_Click(System::Object^  sender, System::EventArgs^  e) {
 			 OpenFileDialog ^ofd = gcnew OpenFileDialog;
 
-			 //ofd->Filter = ".plan";
 			 if (ofd->ShowDialog() != System::Windows::Forms::DialogResult::OK)
 				 return;
 			 
@@ -816,6 +842,8 @@ private: System::Void clean_data() {
 			 tcTFH->Controls->Clear();
 			 tcClassesInfo->Controls->Clear();
 			 cbTeachers->Items->Clear();
+			 txtMinimum->Text = "";
+			 txtPlan->Text = "";
 		}
 private: System::Void btnClearAll_Click(System::Object^  sender, System::EventArgs^  e) {
 			 gaw.clean_data();
